@@ -113,6 +113,6 @@ input_text = open_and_read_file(sys.argv[1])
 chains = make_chains(input_text, 3)
 
 # Produce random text
-# random_text = make_text(chains)
+random_text = make_text(chains)
 
 print chains
