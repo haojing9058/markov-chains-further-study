@@ -17,7 +17,7 @@ def open_and_read_file(file_path):
     return input_text
 
 
-def make_chains(input_text):
+def make_chains(input_text, n): # adding second parameter (n) to handle more -grams
     """Take input text as string; return dictionary of Markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -48,31 +48,30 @@ def make_chains(input_text):
     words = input_text.split()
     # creating list out of long string from open_and_read_file()
 
+    for index in range(len(words) - n):
+    # iterate over each item in the list (except the last n)
+    # changed 2 to "n" to allow more grams
+        grouping = []
+        # empty list created to hold n-gram
+        # included in loop as each word needs a grouping
 
-    for i in range(len(words) - 2):
-    # iterate over each item in the list (except the last two)
-        a = words[i]
-        # assign a to the word when looping
-        # this is the 1st part of our key value
-        b = words[i + 1]
-        # assign b to the word when looping
-        # this is the 2nd part of our key value
-        pair = (a, b,)
-        # put items into a tuple
+        grouping.extend(words[index:index+n])
+        print grouping
+        grouping_key = tuple(grouping)
 
-        if chains.get(pair, False):
-        # check to see if chains{} includes the tuple pair
-            c = words[i + 2]
-            # assign c to the next letter after b
-            chains[pair].append(c)
+        if chains.get(grouping_key, False):
+        # check to see if chains{} includes the tuple group
+            value_for_grouping = words[index + n]
+            # assign value based on grouping_key index (i) in original list
+            chains[grouping_key].append(value_for_grouping)
             # append to the values list within the dictionary
 
         else:
         # if it isn't in the list, create the empty list in the dictionary
         # then follow the same steps above
-            c = words[i + 2]
-            chains[pair] = []
-            chains[pair].append(c)
+            value_for_grouping = words[index + n]
+            chains[grouping_key] = []
+            chains[grouping_key].append(value_for_grouping)
 
 
     return chains
@@ -111,9 +110,9 @@ input_path = "green-eggs.txt"
 input_text = open_and_read_file(sys.argv[1])
 
 # Get a Markov chain
-chains = make_chains(input_text)
+chains = make_chains(input_text, 3)
 
 # Produce random text
-random_text = make_text(chains)
+# random_text = make_text(chains)
 
-print random_text
+print chains
