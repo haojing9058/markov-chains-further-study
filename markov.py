@@ -1,8 +1,28 @@
 """Generate Markov text from text files."""
 
 from random import choice
-
 import sys
+import os
+import twitter
+
+def markov_tweets(random_text):
+    """Takes and parses information from make_text()"""
+
+    tweet = random_text[0:140]
+
+    # slice random_text produced by make_chains to fit tweet char limit
+
+    api = twitter.Api(
+        consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
+        consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
+        access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
+        access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
+
+    print api.VerifyCredentials()
+
+    status = api.PostUpdate(tweet)
+    print status.text
+
 
 def open_and_read_file(file_path):
     """Take file path as string; return text as string.
@@ -100,7 +120,7 @@ def make_text(chains):
         # update keep to continue loop with current key's second value
         # and selected value
 
-    return " ".join(word_chain)
+    return (" ".join(word_chain)).capitalize()
 
 
 input_path = "green-eggs.txt"
@@ -110,9 +130,10 @@ input_path = "green-eggs.txt"
 input_text = open_and_read_file(sys.argv[1])
 
 # Get a Markov chain
-chains = make_chains(input_text, 3)
+chains = make_chains(input_text, 2)
 
 # Produce random text
 random_text = make_text(chains)
 
-print random_text
+# print random_text
+markov_tweets(random_text)
