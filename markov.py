@@ -56,7 +56,6 @@ def make_chains(input_text, n): # adding second parameter (n) to handle more -gr
         # included in loop as each word needs a grouping
 
         grouping.extend(words[index:index+n])
-        print grouping
         grouping_key = tuple(grouping)
 
         if chains.get(grouping_key, False):
@@ -83,20 +82,21 @@ def make_text(chains):
     key_selection = choice(chains.keys())
     # randomly select a key from the chains {} as a seed (tuple)
 
-    word_chain = [key_selection[0], key_selection[1]]
+    word_chain = list(key_selection)
     # create list to hold beginning of chain
-    # first words are the randomly selected tuple pair
+    # first words are the randomly selected tuple group
 
     while key_selection in chains:
     # while loop searches for tuples to chain to
     # stops when tuple is unable to chain
         new_word = choice(chains[key_selection])
         # look for random value in list associated with key
+        # leaving word chain as a tuple so it can be searched in chains{}
 
         word_chain.append(new_word)
         # add word to new word chain
 
-        key_selection = (key_selection[1], new_word,)
+        key_selection = key_selection[1:] + (new_word,)
         # update keep to continue loop with current key's second value
         # and selected value
 
@@ -115,4 +115,4 @@ chains = make_chains(input_text, 3)
 # Produce random text
 random_text = make_text(chains)
 
-print chains
+print random_text
